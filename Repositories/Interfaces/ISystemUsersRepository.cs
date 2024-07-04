@@ -7,6 +7,8 @@ namespace EmployeeManagementSystem.Repositories.Interfaces
         Task AddUserAsync(SystemUsers user);
         Task<SystemUsers> GetUserByIdAsync(int id);
         Task<SystemUsers> GetUserByEmployeeIdAsync(int id);
+
+        //Task<SystemUsers> GetUserByIdentityIdAsync(string id);
         Task<SystemUsers> GetUserByEmail(string email);
         Task<IEnumerable<SystemUsers>> GetAllUsersAsync();
         void Update(SystemUsers user);

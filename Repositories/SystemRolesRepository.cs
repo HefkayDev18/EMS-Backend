@@ -29,6 +29,16 @@ namespace EmployeeManagementSystem.Repositories
             return await _context.Sys_Roles.ToListAsync();
         }
 
+        //public async Task<IEnumerable<string>> GetUserRolesAsync(int roleId)
+        //{
+        //    var roles = await _context.Sys_Roles
+        //                              .Where(c => c.RoleId == roleId)
+        //                              .Select(role => role.RoleName)
+        //                              .ToListAsync();
+        //    return roles;
+        //}
+
+
         public async Task AddRoleAsync(SystemRoles role)
         {
             await _context.Sys_Roles.AddAsync(role);

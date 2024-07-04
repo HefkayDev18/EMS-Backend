@@ -10,6 +10,7 @@ using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using System.Web;
 
 namespace EmployeeManagementSystem.Controllers
 {
@@ -139,7 +140,19 @@ namespace EmployeeManagementSystem.Controllers
                 var roles = await _userManager.GetRolesAsync(appUser);
                 var token = GenerateJwtToken(appUser);
 
-                return Ok(new { token });
+                var userData = new
+                {
+                    employeeObj = user,
+                    email = user.Email,
+                    name = user.FullName,
+                    role = roles.FirstOrDefault()
+                };
+
+                return Ok(new 
+                { 
+                    token,
+                    user = userData
+                });
             }
 
             return Unauthorized("Invalid login attempt.");
@@ -162,16 +175,18 @@ namespace EmployeeManagementSystem.Controllers
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
             var expirationMinutes = _tokenOptions.TokenLifespan.TotalMinutes;
 
-            var resetLink = Url.Action("ResetPassword", "Auth", new { token, email = user.Email }, Request.Scheme);
+            //var resetLink = Url.Action("ResetPassword", "Auth", new { token, email = user.Email }, Request.Scheme);
+            //var resetLink = $"http://localhost:5173/auth/resetpassword?token={token}&email={user.Email}";
+            var resetLink = $"http://localhost:5173/auth/resetpassword?token={HttpUtility.UrlEncode(token)}&email={HttpUtility.UrlEncode(user.Email)}";
+            var employeeObj = await _unitOfWork.Employees.GetEmployeeByEmailAsync(user.Email);
 
             var subject = "Password Reset";
             var message = $@"
                 <html>
-                <body style='font-family: Arial, sans-serif; line-height: 1.6;'>
-                    <h2 style='color: #333;'>Employee Management System Password Reset</h2>
-                    <p>Dear user,</p>
+                <body style='font-family: 'Roboto', sans-serif; line-height: 1.5;'>
+                    <p>Dear {employeeObj.FullName},</p>
                     <p>A request to reset your password was recieved. Please click the link below to reset your password. This link will expire in {expirationMinutes} minutes.</p>
-                    <p><a href='{resetLink}' style='display: inline-block; padding: 10px 20px; color: #fff; background-color: #007bff; text-decoration: none; border-radius: 5px;'>Reset Password</a></p>
+                    <p><a href='{resetLink}' style='display: inline-block; padding: 8px 18px; color: #fff; background-color: #007bff; text-decoration: none; border-radius: 5px;'>Reset Password</a></p>
                     <p>If you did not initiate this request, please ignore this email. Your password will remain unchanged.</p>
                     <p>Best regards,<br>Employee Management System Team.</p>
                 </body>
@@ -197,7 +212,9 @@ namespace EmployeeManagementSystem.Controllers
                 return BadRequest("Invalid request");
             }
 
+            //var token = HttpUtility.UrlDecode(model.Token);
             var result = await _userManager.ResetPasswordAsync(user, model.Token, model.Password);
+
             if (result.Succeeded)
             {
                 return Ok("Password has been reset successfully.");
@@ -231,9 +248,12 @@ namespace EmployeeManagementSystem.Controllers
 
             return username;
         }
+
+       
+
         private async Task<string> GenerateJwtToken(ApplicationUser user)
         {
-            var claims = new[]
+            var claims = new List<Claim>
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.Email),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
@@ -241,19 +261,11 @@ namespace EmployeeManagementSystem.Controllers
             };
 
             var userClaims = await _userManager.GetClaimsAsync(user);
+            claims.AddRange(userClaims);
 
             var userRoles = await _userManager.GetRolesAsync(user);
-
-            var roleClaims = userRoles.Select(role => new Claim(ClaimTypes.Role, role)).ToList();
-
-            var allClaims = claims.Concat(userClaims).Concat(roleClaims).ToList();
-
-            //var roleClaims = new List<Claim>();
-            //foreach (var role in userRoles)
-            //{
-            //    roleClaims.Add(new Claim(ClaimTypes.Role, role));
-            //}
-            //var allClaims = claims.Concat(userClaims).Concat(roleClaims);
+            var roleClaims = userRoles.Select(role => new Claim(ClaimTypes.Role, role));
+            claims.AddRange(roleClaims);
 
             var jwtKey = Environment.GetEnvironmentVariable("JWT_KEY");
 
@@ -268,13 +280,100 @@ namespace EmployeeManagementSystem.Controllers
             var token = new JwtSecurityToken(
                 issuer: _configuration["Jwt:Issuer"],
                 audience: _configuration["Jwt:Audience"],
-                claims: allClaims,
-                expires: DateTime.Now.AddMinutes(30),
+                claims: claims,
+                expires: DateTime.UtcNow.AddMinutes(30),
                 signingCredentials: creds
             );
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
+
+
+        //private async Task<string> GenerateJwtToken(ApplicationUser user)
+        //{
+        //    var claims = new List<Claim>
+        //    {
+        //        new Claim(JwtRegisteredClaimNames.Sub, user.Email),
+        //        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+        //        new Claim(ClaimTypes.NameIdentifier, user.Id)
+        //    };
+
+        //    var userClaims = await _userManager.GetClaimsAsync(user);
+        //    claims.AddRange(userClaims);
+
+        //    var userRoles = await _userManager.GetRolesAsync(user);
+        //    var roleClaims = userRoles.Select(role => new Claim(ClaimTypes.Role, role));
+        //    claims.AddRange(roleClaims);
+
+        //    var jwtKey = Environment.GetEnvironmentVariable("JWT_KEY");
+
+        //    if (string.IsNullOrEmpty(jwtKey))
+        //    {
+        //        throw new InvalidOperationException("JWT_KEY is not set.");
+        //    }
+
+        //    var base64EncodedKey = Convert.ToBase64String(Encoding.UTF8.GetBytes(jwtKey));
+
+        //    var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(base64EncodedKey));
+        //    var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+        //    var token = new JwtSecurityToken(
+        //        issuer: _configuration["Jwt:Issuer"],
+        //        audience: _configuration["Jwt:Audience"],
+        //        claims: claims,
+        //        expires: DateTime.UtcNow.AddMinutes(30),
+        //        signingCredentials: creds
+        //    );
+
+        //    return new JwtSecurityTokenHandler().WriteToken(token);
+        //}
+
+
+        //private async Task<string> GenerateJwtToken(ApplicationUser user)
+        //{
+        //    var claims = new[]
+        //    {
+        //        new Claim(JwtRegisteredClaimNames.Sub, user.Email),
+        //        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+        //        new Claim(ClaimTypes.NameIdentifier, user.Id)
+        //    };
+
+        //    var userClaims = await _userManager.GetClaimsAsync(user);
+
+        //    var userRoles = await _userManager.GetRolesAsync(user);
+
+        //    var roleClaims = userRoles.Select(role => new Claim(ClaimTypes.Role, role)).ToList();
+
+        //    var allClaims = claims.Concat(userClaims).Concat(roleClaims).ToList();
+
+        //    //var roleClaims = new List<Claim>();
+        //    //foreach (var role in userRoles)
+        //    //{
+        //    //    roleClaims.Add(new Claim(ClaimTypes.Role, role));
+        //    //}
+        //    //var allClaims = claims.Concat(userClaims).Concat(roleClaims);
+
+        //    var jwtKey = Environment.GetEnvironmentVariable("JWT_KEY");
+
+        //    if (string.IsNullOrEmpty(jwtKey))
+        //    {
+        //        throw new InvalidOperationException("JWT_KEY is not set.");
+        //    }
+
+        //    var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey));
+        //    var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+        //    var token = new JwtSecurityToken(
+        //        issuer: _configuration["Jwt:Issuer"],
+        //        audience: _configuration["Jwt:Audience"],
+        //        claims: allClaims,
+        //        expires: DateTime.Now.AddMinutes(30),
+        //        signingCredentials: creds
+        //    );
+
+        //    return new JwtSecurityTokenHandler().WriteToken(token);
+        //}
         #endregion
     }
 }
+

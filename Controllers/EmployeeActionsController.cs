@@ -11,19 +11,13 @@ namespace EmployeeManagementSystem.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class EmployeeActionsController : ControllerBase
+    public class EmployeeActionsController(UserManager<ApplicationUser> userManager, IUnitOfWork unitOfWork) : ControllerBase
     {
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly UserManager<ApplicationUser> _userManager;
-
-        public EmployeeActionsController(UserManager<ApplicationUser> userManager, IUnitOfWork unitOfWork)
-        {
-            _userManager = userManager;
-            _unitOfWork = unitOfWork;
-        }
+        private readonly IUnitOfWork _unitOfWork = unitOfWork;
+        private readonly UserManager<ApplicationUser> _userManager = userManager;
 
         [HttpGet("GetAllEmployees")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin, User")]
         public async Task<IActionResult> GetAllEmployees()
         {
             var employees = await _unitOfWork.Employees.GetAllEmployeesAsync();

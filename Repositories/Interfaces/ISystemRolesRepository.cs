@@ -7,6 +7,7 @@ namespace EmployeeManagementSystem.Repositories.Interfaces
         Task<SystemRoles> GetRoleByIdAsync(int roleId);
         Task<SystemRoles> GetRoleByNameAsync(string roleName);
         Task<IEnumerable<SystemRoles>> GetAllRolesAsync();
+        //Task<IEnumerable<string>> GetUserRolesAsync(int roleId);
         Task AddRoleAsync(SystemRoles role);
         Task UpdateRoleAsync(SystemRoles role);
         Task DeleteRoleAsync(int roleId);

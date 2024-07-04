@@ -14,12 +14,25 @@ var builder = WebApplication.CreateBuilder(args);
 DotNetEnv.Env.Load();
 
 // Add services to the container.
-builder.Services.AddDbContext<ApplicationDbContext>(options => 
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowLocalhost", 
+        builder =>
+    {
+        builder.WithOrigins("http://localhost:5173")
+               .AllowAnyHeader()
+               .AllowAnyMethod();
+    });
+
+});
+
 
 builder.Services.Configure<DataProtectionTokenProviderOptions>(options =>
         options.TokenLifespan = TimeSpan.FromMinutes(15));
@@ -70,10 +83,11 @@ builder.Services.AddTransient<IEmailService, EmailService>();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen( options =>
+builder.Services.AddSwaggerGen(options =>
 {
-    options.SwaggerDoc("v1", new OpenApiInfo { 
-        Title = "Employee Management System", 
+    options.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "Employee Management System",
         Version = "v1"
     });
 
@@ -124,11 +138,17 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    app.UseDeveloperExceptionPage();
 }
 
 app.UseHttpsRedirection();
 
+//app.UseStaticFiles();
+
 app.UseAuthentication();
+
+app.UseCors("AllowLocalhost");
+
 app.UseAuthorization();
 
 app.MapControllers();

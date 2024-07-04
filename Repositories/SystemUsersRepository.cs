@@ -29,6 +29,10 @@ namespace EmployeeManagementSystem.Repositories
             return await _context.Sys_Users.FirstOrDefaultAsync(c => c.EmployeeId == id);
         }
 
+        //public async Task<SystemUsers> GetUserByIdentityIdAsync(string id)
+        //{
+        //    return await _context.Sys_Users.FirstOrDefaultAsync(c => c.IdentityId == id);
+        //}
 
         public async Task<SystemUsers> GetUserByEmail(string email)
         {
