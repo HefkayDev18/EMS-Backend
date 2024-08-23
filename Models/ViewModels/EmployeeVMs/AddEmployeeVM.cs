@@ -36,5 +36,6 @@ namespace EmployeeManagementSystem.Models.ViewModels.EmployeeVMs
         [Required]
         [DataType(DataType.Date)]
         public DateTime DateOfBirth { get; set; }
+        public bool HasEmploymentHistory { get; set; } = false;
     }
 }

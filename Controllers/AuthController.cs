@@ -93,6 +93,7 @@ namespace EmployeeManagementSystem.Controllers
 
                 employee.UserId = newUser.UserId;
                 employee.RoleId = newUser.RoleId;
+                employee.IsActive = true;
                 await _unitOfWork.Employees.UpdateEmployeeAsync(employee);
 
                 await _unitOfWork.CompleteAsync();
@@ -138,7 +139,7 @@ namespace EmployeeManagementSystem.Controllers
             if (result.Succeeded)
             {
                 var roles = await _userManager.GetRolesAsync(appUser);
-                var token = GenerateJwtToken(appUser);
+                var generatedToken = GenerateJwtToken(appUser);
 
                 var userData = new
                 {
@@ -150,7 +151,7 @@ namespace EmployeeManagementSystem.Controllers
 
                 return Ok(new 
                 { 
-                    token,
+                    token = generatedToken.Result,
                     user = userData
                 });
             }
@@ -274,6 +275,7 @@ namespace EmployeeManagementSystem.Controllers
                 throw new InvalidOperationException("JWT_KEY is not set.");
             }
 
+            //var key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtKey));
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 

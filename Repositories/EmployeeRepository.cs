@@ -16,7 +16,9 @@ namespace EmployeeManagementSystem.Repositories
 
         public async Task<IEnumerable<Employee>> GetAllEmployeesAsync()
         {
-            var employee = await _context.Employees.ToListAsync();
+            var employee = await _context.Employees
+                                            .OrderByDescending(e => e.DateCreated)
+                                            .ToListAsync();
 
             return employee;
         }

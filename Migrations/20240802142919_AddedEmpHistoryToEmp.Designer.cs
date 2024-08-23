@@ -4,6 +4,7 @@ using EmployeeManagementSystem.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EmployeeManagementSystem.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240802142919_AddedEmpHistoryToEmp")]
+    partial class AddedEmpHistoryToEmp
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -87,38 +90,6 @@ namespace EmployeeManagementSystem.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("EmployeeManagementSystem.Models.Entities.Credentials", b =>
-                {
-                    b.Property<int>("UploadId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UploadId"));
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("DocumentType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("EmployeeId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("FilePath")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("UploadedDate")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("UploadId");
-
-                    b.HasIndex("EmployeeId");
-
-                    b.ToTable("Emp_Credentials");
-                });
-
             modelBuilder.Entity("EmployeeManagementSystem.Models.Entities.Department", b =>
                 {
                     b.Property<int>("DepartmentId")
@@ -146,79 +117,6 @@ namespace EmployeeManagementSystem.Migrations
                     b.HasKey("DepartmentId");
 
                     b.ToTable("Departments");
-                });
-
-            modelBuilder.Entity("EmployeeManagementSystem.Models.Entities.EmpAppraisal", b =>
-                {
-                    b.Property<int>("AppraisalId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AppraisalId"));
-
-                    b.Property<int>("Adaptability")
-                        .HasColumnType("int");
-
-                    b.Property<int>("AdministrationExperience")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("AppDateCreated")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("AppDateSubmitted")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Comments")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Communication")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CommunityService")
-                        .HasColumnType("int");
-
-                    b.Property<int>("EmployeeId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Leadership")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ManagerComment")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("OverallSatisfaction")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PatentConferencing")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProblemSolving")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PublicationProgress")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Punctuality")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("ReviewedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Teaching")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Teamwork")
-                        .HasColumnType("int");
-
-                    b.HasKey("AppraisalId");
-
-                    b.HasIndex("EmployeeId");
-
-                    b.ToTable("Emp_Appraisals");
                 });
 
             modelBuilder.Entity("EmployeeManagementSystem.Models.Entities.EmpHistory", b =>
@@ -256,45 +154,6 @@ namespace EmployeeManagementSystem.Migrations
                     b.HasIndex("EmployeeId");
 
                     b.ToTable("Emp_History");
-                });
-
-            modelBuilder.Entity("EmployeeManagementSystem.Models.Entities.EmpMedRecords", b =>
-                {
-                    b.Property<int>("MedRecordsId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MedRecordsId"));
-
-                    b.Property<DateTime?>("AppointmentDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Comments")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("DateOfRecord")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Diagnosis")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("DoctorName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("EmployeeId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Prescription")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("MedRecordsId");
-
-                    b.HasIndex("EmployeeId");
-
-                    b.ToTable("Emp_MedRecords");
                 });
 
             modelBuilder.Entity("EmployeeManagementSystem.Models.Entities.EmpPositions", b =>
@@ -615,43 +474,10 @@ namespace EmployeeManagementSystem.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("EmployeeManagementSystem.Models.Entities.Credentials", b =>
-                {
-                    b.HasOne("EmployeeManagementSystem.Models.Entities.Employee", "Employee")
-                        .WithMany()
-                        .HasForeignKey("EmployeeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Employee");
-                });
-
-            modelBuilder.Entity("EmployeeManagementSystem.Models.Entities.EmpAppraisal", b =>
-                {
-                    b.HasOne("EmployeeManagementSystem.Models.Entities.Employee", "Employee")
-                        .WithMany("Appraisals")
-                        .HasForeignKey("EmployeeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Employee");
-                });
-
             modelBuilder.Entity("EmployeeManagementSystem.Models.Entities.EmpHistory", b =>
                 {
                     b.HasOne("EmployeeManagementSystem.Models.Entities.Employee", "Employee")
                         .WithMany("EmploymentHistories")
-                        .HasForeignKey("EmployeeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Employee");
-                });
-
-            modelBuilder.Entity("EmployeeManagementSystem.Models.Entities.EmpMedRecords", b =>
-                {
-                    b.HasOne("EmployeeManagementSystem.Models.Entities.Employee", "Employee")
-                        .WithMany("EmpMedRecords")
                         .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -758,10 +584,6 @@ namespace EmployeeManagementSystem.Migrations
 
             modelBuilder.Entity("EmployeeManagementSystem.Models.Entities.Employee", b =>
                 {
-                    b.Navigation("Appraisals");
-
-                    b.Navigation("EmpMedRecords");
-
                     b.Navigation("EmploymentHistories");
                 });
 #pragma warning restore 612, 618

@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace EmployeeManagementSystem.Models.Entities
 {
@@ -55,10 +56,18 @@ namespace EmployeeManagementSystem.Models.Entities
 
         [DataType(DataType.Date)]
         public DateTime DateCreated { get; set; }
+        public bool HasEmploymentHistory { get; set; } = false;
 
         [StringLength(500)]
         public string? Address { get; set; }
 
+        [JsonIgnore]
+        public virtual ICollection<EmpHistory> EmploymentHistories { get; set; } = new List<EmpHistory>();
 
+        [JsonIgnore]
+        public virtual ICollection<EmpAppraisal> Appraisals { get; set; } = new List<EmpAppraisal>();
+
+        [JsonIgnore]
+        public virtual ICollection<EmpMedRecords> EmpMedRecords { get; set; } = new List<EmpMedRecords>();
     }
 }

@@ -1,6 +1,8 @@
 ﻿using EmployeeManagementSystem.Data;
 using EmployeeManagementSystem.Models.Entities;
+using EmployeeManagementSystem.Repositories.CoreFeatures;
 using EmployeeManagementSystem.Repositories.Interfaces;
+using EmployeeManagementSystem.Repositories.Interfaces.ICoreFeatures;
 
 namespace EmployeeManagementSystem.Repositories
 {
@@ -16,6 +18,12 @@ namespace EmployeeManagementSystem.Repositories
             Sys_Roles = new SystemRolesRepository(_context);
             Departments = new DepartmentRepository(_context);
             Faculties = new FacultyRepository(_context);
+            Emp_History = new EhHistoryRepository(_context);
+            Emp_Positions = new EmpPositionRepository(_context);
+            Emp_Appraisals = new EmpAppraisalRepository(_context);
+            Emp_MedRecords = new EmpMedRecordsRepository(_context);
+            Emp_Credentials = new CredentialsRepository(_context);
+            //Emp_AppraisalsComment = new EmpAppraisalCommentRepository(_context);
         }
 
         public IEmployeeRepository Employees { get; private set; }
@@ -23,6 +31,13 @@ namespace EmployeeManagementSystem.Repositories
         public ISystemRolesRepository Sys_Roles { get; private set; }
         public IDepartmentRepository Departments { get; private set; }
         public IFacultyRepository Faculties { get; private set; }
+        public IEhHistoryRepository Emp_History { get; private set; }
+        public IEmpPositionRepository Emp_Positions { get; private set; }
+        public IEmpAppraisalRepository Emp_Appraisals { get; private set; }
+        public IEmpMedRecordsRepository Emp_MedRecords { get; private set; }
+        public ICredentialsRepository Emp_Credentials { get; private set; }
+        //public IEmpAppraisalCommentRepository Emp_AppraisalsComment { get; private set; }
+
 
         public async Task<int> CompleteAsync()
         {

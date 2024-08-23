@@ -4,6 +4,7 @@ using EmployeeManagementSystem.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EmployeeManagementSystem.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240807191555_AddedEmpMedRecords")]
+    partial class AddedEmpMedRecords
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -85,38 +88,6 @@ namespace EmployeeManagementSystem.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
-                });
-
-            modelBuilder.Entity("EmployeeManagementSystem.Models.Entities.Credentials", b =>
-                {
-                    b.Property<int>("UploadId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UploadId"));
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("DocumentType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("EmployeeId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("FilePath")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("UploadedDate")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("UploadId");
-
-                    b.HasIndex("EmployeeId");
-
-                    b.ToTable("Emp_Credentials");
                 });
 
             modelBuilder.Entity("EmployeeManagementSystem.Models.Entities.Department", b =>
@@ -615,17 +586,6 @@ namespace EmployeeManagementSystem.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("EmployeeManagementSystem.Models.Entities.Credentials", b =>
-                {
-                    b.HasOne("EmployeeManagementSystem.Models.Entities.Employee", "Employee")
-                        .WithMany()
-                        .HasForeignKey("EmployeeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Employee");
-                });
-
             modelBuilder.Entity("EmployeeManagementSystem.Models.Entities.EmpAppraisal", b =>
                 {
                     b.HasOne("EmployeeManagementSystem.Models.Entities.Employee", "Employee")
@@ -651,7 +611,7 @@ namespace EmployeeManagementSystem.Migrations
             modelBuilder.Entity("EmployeeManagementSystem.Models.Entities.EmpMedRecords", b =>
                 {
                     b.HasOne("EmployeeManagementSystem.Models.Entities.Employee", "Employee")
-                        .WithMany("EmpMedRecords")
+                        .WithMany()
                         .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -759,8 +719,6 @@ namespace EmployeeManagementSystem.Migrations
             modelBuilder.Entity("EmployeeManagementSystem.Models.Entities.Employee", b =>
                 {
                     b.Navigation("Appraisals");
-
-                    b.Navigation("EmpMedRecords");
 
                     b.Navigation("EmploymentHistories");
                 });
