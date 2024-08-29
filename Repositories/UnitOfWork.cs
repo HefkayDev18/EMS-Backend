@@ -23,6 +23,7 @@ namespace EmployeeManagementSystem.Repositories
             Emp_Appraisals = new EmpAppraisalRepository(_context);
             Emp_MedRecords = new EmpMedRecordsRepository(_context);
             Emp_Credentials = new CredentialsRepository(_context);
+            Emp_Adverts = new AdvertsRepository(_context);
             //Emp_AppraisalsComment = new EmpAppraisalCommentRepository(_context);
         }
 
@@ -36,6 +37,7 @@ namespace EmployeeManagementSystem.Repositories
         public IEmpAppraisalRepository Emp_Appraisals { get; private set; }
         public IEmpMedRecordsRepository Emp_MedRecords { get; private set; }
         public ICredentialsRepository Emp_Credentials { get; private set; }
+        public IAdvertsRepository Emp_Adverts { get; private set; }
         //public IEmpAppraisalCommentRepository Emp_AppraisalsComment { get; private set; }
 
 

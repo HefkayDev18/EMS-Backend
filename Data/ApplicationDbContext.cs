@@ -21,6 +21,7 @@ namespace EmployeeManagementSystem.Data
         public DbSet<EmpAppraisal> Emp_Appraisals { get; set; }
         public DbSet<EmpMedRecords> Emp_MedRecords { get; set; }
         public DbSet<Credentials> Emp_Credentials { get; set; }
+        public DbSet<Advertisements> Emp_Adverts { get; set; }
         //public DbSet<EmpAppraisalComment> Emp_AppraisalsComment { get; set; }
     }
 }

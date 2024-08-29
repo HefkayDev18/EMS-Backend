@@ -1,5 +1,5 @@
-appsettings.json
 bin/
 obj/
+Uploads/
 .env
-uploads/
+appsettings.json                                            

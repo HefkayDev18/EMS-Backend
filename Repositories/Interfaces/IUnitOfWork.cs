@@ -14,6 +14,7 @@ namespace EmployeeManagementSystem.Repositories.Interfaces
         IEmpAppraisalRepository Emp_Appraisals { get; }
         IEmpMedRecordsRepository Emp_MedRecords { get; }
         ICredentialsRepository Emp_Credentials { get; }
+        IAdvertsRepository Emp_Adverts { get; }
         //IEmpAppraisalCommentRepository Emp_AppraisalsComment { get; }
         Task<int> CompleteAsync();
     }

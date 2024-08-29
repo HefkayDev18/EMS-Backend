@@ -19,7 +19,7 @@ namespace EmployeeManagementSystem.Controllers
 
 
         [HttpGet("GetEmployeeHistory/{employeeId}")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "User, Admin")]
         public async Task<IActionResult> GetEmployeeHistory(int employeeId)
         {
             var empHistories = await _unitOfWork.Emp_History.GetEmploymentHistoriesByEmployeeIdAsync(employeeId);
