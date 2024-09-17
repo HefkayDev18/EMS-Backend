@@ -19,7 +19,7 @@ namespace EmployeeManagementSystem.Controllers
         }
 
         [HttpGet("GetDepartments")]
-        [Authorize(Roles = "Admin, User")]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<Department>>> GetDepartments()
         {
             var departments = await _unitOfWork.Departments.GetAllDepartmentsAsync();
@@ -27,7 +27,7 @@ namespace EmployeeManagementSystem.Controllers
         }
 
         [HttpGet("GetDepartmentById/{id}")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Faculty_Officer")]
         public async Task<ActionResult<Department>> GetDepartmentById(int id)
         {
 
@@ -45,7 +45,7 @@ namespace EmployeeManagementSystem.Controllers
         }
 
         [HttpPost("AddDepartment")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Faculty_Officer")]
         public async Task<ActionResult<Department>> AddDepartment(AddDepartmentVM addDepartmentVM)
         {
 
@@ -86,7 +86,7 @@ namespace EmployeeManagementSystem.Controllers
 
 
         [HttpPut("UpdateDepartment/{id}")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Faculty_Officer")]
         public async Task<ActionResult<Department>> UpdateDepartment(int id, UpdateDepartmentVM updateDepartmentVM)
         {
 
@@ -113,7 +113,7 @@ namespace EmployeeManagementSystem.Controllers
         }
 
         [HttpDelete("DeleteDepartment/{id}")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Faculty_Officer")]
         public async Task<IActionResult> DeleteDepartment(int id)
         {
 

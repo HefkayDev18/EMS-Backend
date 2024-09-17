@@ -30,5 +30,13 @@ namespace EmployeeManagementSystem.Repositories.CoreFeatures
 
             return positions;
         }
+        public async Task<EmpPositions> UpdateEmpPositionAsync(EmpPositions empPosition)
+        {
+            _context.Entry(empPosition).State = EntityState.Modified;
+
+            await _context.SaveChangesAsync();
+
+            return empPosition;
+        }
     }
 }

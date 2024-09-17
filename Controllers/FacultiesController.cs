@@ -9,6 +9,7 @@ namespace EmployeeManagementSystem.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class FacultiesController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -19,7 +20,7 @@ namespace EmployeeManagementSystem.Controllers
         }
 
         [HttpGet("GetFaculties")]
-        [Authorize(Roles = "Admin, User")]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<Faculty>>> GetFaculties()
         {
             var faculties = await _unitOfWork.Faculties.GetAllFacultiesAsync();
@@ -27,7 +28,7 @@ namespace EmployeeManagementSystem.Controllers
         }
 
         [HttpGet("GetFacultyById/{id}")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Faculty_Officer")]
         public async Task<ActionResult<Faculty>> GetFacultiesById(int id)
         {
 
@@ -45,7 +46,7 @@ namespace EmployeeManagementSystem.Controllers
         }
 
         [HttpPost("AddFaculty")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Faculty_Officer")]
         public async Task<ActionResult<Department>> AddFaculty(AddFacultyVM addFacultyVM)
         {
 
@@ -77,7 +78,7 @@ namespace EmployeeManagementSystem.Controllers
 
 
         [HttpDelete("DeleteFaculty/{id}")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Faculty_Officer")]
         public async Task<IActionResult> DeleteFaculty(int id)
         {
 

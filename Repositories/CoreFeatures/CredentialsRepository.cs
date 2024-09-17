@@ -27,6 +27,7 @@ namespace EmployeeManagementSystem.Repositories.CoreFeatures
         {
             return await _context.Emp_Credentials
                 .Include(a => a.EmployeeCred)
+                .OrderByDescending(a => a.UploadedDate)
                 .Where(a => a.EmployeeId == employeeId)
                 .ToListAsync();
         }

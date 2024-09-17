@@ -6,5 +6,6 @@ namespace EmployeeManagementSystem.Repositories.Interfaces.ICoreFeatures
     {
         Task<EmpPositions> AddPositionAsync(EmpPositions position);
         Task<List<EmpPositions>> GetPositionsByEmployeeIdAsync(int employeeId);
+        Task<EmpPositions> UpdateEmpPositionAsync(EmpPositions empPosition);
     }
 }

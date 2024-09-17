@@ -17,7 +17,7 @@ namespace EmployeeManagementSystem.Controllers.CoreFeatures
 
 
         [HttpGet("GetEmpUploads/{empId}")]
-        [Authorize(Roles = "Admin, User")]
+        [Authorize]
         public async Task<IActionResult> GetEmpUploads(int empId)
         {
             var uploads = await _unitOfWork.Emp_Credentials.GetUploadsByEmployeeIdAsync(empId);
@@ -25,7 +25,7 @@ namespace EmployeeManagementSystem.Controllers.CoreFeatures
         }
 
         [HttpGet("GetAllUploads")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "HR_Admin")]
         public async Task<IActionResult> GetAllUploads()
         {
             var uploads = await _unitOfWork.Emp_Credentials.GetUploadsAsync();
@@ -34,7 +34,7 @@ namespace EmployeeManagementSystem.Controllers.CoreFeatures
 
 
         [HttpPost("Uploads/{empId}")]
-        [Authorize(Roles = "Admin, User")]
+        [Authorize]
         public async Task<IActionResult> Uploads(int empId, [FromForm] CredentialsVM model)
         {
             if (model.Files == null || model.Files.Count == 0)

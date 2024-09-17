@@ -15,7 +15,7 @@ namespace EmployeeManagementSystem.Controllers.CoreFeatures
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
 
         [HttpGet("GetAllAds")]
-        [Authorize(Roles = "Admin, User")]
+        [Authorize]
         public async Task<IActionResult> GetAllAds()
         {
             var ads = await _unitOfWork.Emp_Adverts.GetAdsAsync();
@@ -23,7 +23,7 @@ namespace EmployeeManagementSystem.Controllers.CoreFeatures
         }
 
         [HttpPost("UploadAds/{empId}")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "HR_Admin")]
         public async Task<IActionResult> UploadAds(int empId, int adsId, [FromForm] AddAdvertsVM model)
         {
             if (!ModelState.IsValid)
@@ -102,7 +102,7 @@ namespace EmployeeManagementSystem.Controllers.CoreFeatures
         }
 
         [HttpPut("UpdateAds/{empId}/{adsId}")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "HR_Admin")]
         public async Task<IActionResult> UpdateAds(int empId, int adsId, [FromForm] UpdateAdvertsVM model)
         {
             if (!ModelState.IsValid)

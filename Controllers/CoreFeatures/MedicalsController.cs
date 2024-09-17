@@ -16,7 +16,7 @@ namespace EmployeeManagementSystem.Controllers.CoreFeatures
 
 
         [HttpGet("GetMedicalRecords")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "MED_Admin")]
         public async Task<IActionResult> GetMedicalRecords()
         {
             var records = await _unitOfWork.Emp_MedRecords.GetMedRecordsAsync();
@@ -24,7 +24,7 @@ namespace EmployeeManagementSystem.Controllers.CoreFeatures
         }
 
         [HttpGet("GetMedicalRecordsByEmployee/{employeeId}")]
-        [Authorize(Roles = "User")]
+        [Authorize]
         public async Task<IActionResult> GetMedicalRecordsByEmployee(int employeeId)
         {
             var records = await _unitOfWork.Emp_MedRecords.GetMedRecordsByEmployeeIdAsync(employeeId);
@@ -56,7 +56,7 @@ namespace EmployeeManagementSystem.Controllers.CoreFeatures
 
 
         [HttpPost("AddMedicalRecord/{employeeId}")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "MED_Admin")]
         public async Task<IActionResult> AddMedicalRecord(int employeeId, [FromBody] AddMedRecordVM request)
         {
             var employee = _unitOfWork.Employees.GetEmployeeByIdAsync(employeeId);
@@ -82,7 +82,7 @@ namespace EmployeeManagementSystem.Controllers.CoreFeatures
         }
 
         [HttpGet("GetPaginatedMedicalRecords")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "MED_Admin")]
         public async Task<IActionResult> GetPaginatedMedicalRecords([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
         {
             var records = await _unitOfWork.Emp_MedRecords.GetPaginatedMedRecordsAsync(page, pageSize);

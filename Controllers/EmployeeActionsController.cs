@@ -21,7 +21,7 @@ namespace EmployeeManagementSystem.Controllers
 
         #region User
         [HttpGet("GetAllUsers")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin, HR_Admin")]
         public async Task<IActionResult> GetAllUsers()
         {
             var users = await _unitOfWork.Sys_Users.GetAllUsersAsync();
@@ -32,7 +32,7 @@ namespace EmployeeManagementSystem.Controllers
         #region Employee
 
         [HttpGet("GetAllEmployees")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin, HR_Admin, MED_Admin")]
         public async Task<IActionResult> GetAllEmployees()
         {
             var employees = await _unitOfWork.Employees.GetAllEmployeesAsync();
@@ -45,7 +45,7 @@ namespace EmployeeManagementSystem.Controllers
         }
 
         [HttpGet("GetEmployeeById/{id}")]
-        [Authorize(Roles = "Admin,User")]
+        [Authorize]
         public async Task<IActionResult> GetEmployeeById(int id)
         {
             if (!ModelState.IsValid)
@@ -63,7 +63,7 @@ namespace EmployeeManagementSystem.Controllers
 
 
         [HttpPost("AddEmployee")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "HR_Admin")]
         public async Task<IActionResult> AddEmployee([FromBody] AddEmployeeVM employeeVM)
         {
 
@@ -119,7 +119,7 @@ namespace EmployeeManagementSystem.Controllers
 
 
         [HttpPut("UpdateEmployee/{id}")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "HR_Admin")]
         public async Task<IActionResult> UpdateEmployee(int id, [FromBody] UpdateEmployeeVM UpdateEmployee)
         {
             if (!ModelState.IsValid)
@@ -182,7 +182,7 @@ namespace EmployeeManagementSystem.Controllers
         }
 
         [HttpDelete("DeleteEmployee/{id}")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "HR_Admin")]
         public async Task<IActionResult> DeleteEmployee(int id)
         {
             var employee = await _unitOfWork.Employees.GetEmployeeByIdAsync(id);
@@ -200,7 +200,7 @@ namespace EmployeeManagementSystem.Controllers
 
         #region Roles
         [HttpGet("GetAllRoles")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin, HR_Admin")]
         public async Task<IActionResult> GetAllRoles()
         {
             var roles = await _unitOfWork.Sys_Roles.GetAllRolesAsync();
@@ -226,7 +226,7 @@ namespace EmployeeManagementSystem.Controllers
 
 
         [HttpPut("UpdateEmployeeRole/{id}")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "HR_Admin")]
         public async Task<IActionResult> UpdateEmployeeRole(int id, UpdateEmployeeRoleVM updateEmployeeRoleVM)
         {
             if (!ModelState.IsValid)

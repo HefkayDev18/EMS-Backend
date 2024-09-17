@@ -24,6 +24,7 @@ namespace EmployeeManagementSystem.Models.ViewModels.CoreFeaturesVMs
     public class ViewEmpHistoryVM
     {
         public int Id { get; set; }
+        public int EmployeeId { get; set; }
         public DateTime DateEmployed { get; set; }
         public DateTime? DateRelieved { get; set; }
         public required string Duration { get; set; }

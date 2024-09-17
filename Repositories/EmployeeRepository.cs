@@ -1,5 +1,6 @@
 ﻿using EmployeeManagementSystem.Data;
 using EmployeeManagementSystem.Models.Entities;
+using EmployeeManagementSystem.Models.ViewModels.EmployeeVMs;
 using EmployeeManagementSystem.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,9 +15,27 @@ namespace EmployeeManagementSystem.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<Employee>> GetAllEmployeesAsync()
+        public async Task<IEnumerable<ViewEmpVM>> GetAllEmployeesAsync()
         {
             var employee = await _context.Employees
+                                            .Include(e => e.Role)
+                                            .Select(e => new ViewEmpVM
+                                            {
+                                                 EmployeeId = e.EmployeeId,
+                                                 FullName = e.FullName,
+                                                 Email = e.Email,
+                                                 PhoneNumber = e.PhoneNumber,
+                                                 IsActive = e.IsActive,
+                                                 Gender = e.Gender,
+                                                 Position = e.Position,
+                                                 Department = e.Department,
+                                                 Salary = e.Salary,
+                                                 RoleId = e.RoleId,
+                                                 RoleName = e.Role.RoleName,
+                                                 DateCreated = e.DateCreated,
+                                                 HasEmploymentHistory = e.HasEmploymentHistory,
+                                                 DateOfBirth = e.DateOfBirth
+                                             })
                                             .OrderByDescending(e => e.DateCreated)
                                             .ToListAsync();
 

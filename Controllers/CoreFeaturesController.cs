@@ -19,7 +19,7 @@ namespace EmployeeManagementSystem.Controllers
 
 
         [HttpGet("GetEmployeeHistory/{employeeId}")]
-        [Authorize(Roles = "User, Admin")]
+        [Authorize]
         public async Task<IActionResult> GetEmployeeHistory(int employeeId)
         {
             var empHistories = await _unitOfWork.Emp_History.GetEmploymentHistoriesByEmployeeIdAsync(employeeId);
@@ -36,6 +36,7 @@ namespace EmployeeManagementSystem.Controllers
                 EmploymentHistories = empHistories.Select(eh => new ViewEmpHistoryVM
                 {
                     Id = eh.Id,
+                    EmployeeId = eh.EmployeeId,
                     DateEmployed = eh.DateEmployed,
                     DateRelieved = eh.DateRelieved,
                     Duration = eh.Duration,
@@ -50,7 +51,7 @@ namespace EmployeeManagementSystem.Controllers
 
 
         [HttpPost("CreateEmploymentHistory/{employeeId}")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "HR_Admin")]
         public async Task<IActionResult> CreateEmploymentHistory(int employeeId,[FromBody] AddEmpHistoryVM empHistoryVM)
         {
             if (!ModelState.IsValid)
@@ -69,6 +70,7 @@ namespace EmployeeManagementSystem.Controllers
             }
 
             var duration = CalculateDuration(empHistoryVM.DateEmployed, DateTime.Now);
+
 
             var newHistory = new EmpHistory()
             { 
@@ -93,7 +95,7 @@ namespace EmployeeManagementSystem.Controllers
         }
 
         [HttpPut("UpdateEmploymentHistory/{employeeId}")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "HR_Admin")]
         public async Task<IActionResult> UpdateEmploymentHistory(int employeeId,[FromBody] UpdateEmpHistoryVM empHistoryVM)
         {
             if (!ModelState.IsValid)
@@ -125,12 +127,27 @@ namespace EmployeeManagementSystem.Controllers
                 return NotFound("Employee does not exist");
             }
 
-            
+            var duration = CalculateDuration(empHistoryVM.DateEmployed, DateTime.Now);
+
+
             existingHistory.DateEmployed = empHistoryVM.DateEmployed;
             existingHistory.DateRelieved = empHistoryVM.DateRelieved;
             existingHistory.CurrentlyEmployed = empHistoryVM.CurrentlyEmployed;
+            existingHistory.Duration = duration;
             existingHistory.Description = empHistoryVM.Description;
 
+            if (existingHistory.DateRelieved != null && existingHistory.DateRelieved > DateTime.Now)
+            {
+                existingHistory.CurrentlyEmployed = false;
+
+                var updatedPosition = new EmpPositions()
+                {
+                    Position = existingEmployee.Position,
+                    DepartmentName = existingEmployee.Department,
+                    DateEnded = existingHistory.DateRelieved
+                };
+                await _unitOfWork.Emp_Positions.UpdateEmpPositionAsync(updatedPosition);
+            }
 
             await _unitOfWork.Emp_History.UpdateEmpHistoryAsync(existingHistory);
             await _unitOfWork.CompleteAsync();
